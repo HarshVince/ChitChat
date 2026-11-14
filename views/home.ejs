@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rooms | StudySync</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/nav', { user }) %>
+    <main>
+
+        <div class="hero glass">
+            <h2>Hey, <%= user.name %> 👋</h2>
+            <p>Create a room or join one to start studying together.</p>
+        </div>
+
+        <% if (error) { %>
+            <div class="err" style="margin-bottom:1rem"><%= error %></div>
+        <% } %>
+
+        <div class="two" style="margin-bottom:.5rem">
+            <form class="form-card glass form" method="POST" action="/room">
+                <div class="form-card-title">Create a room</div>
+                <input name="name" placeholder="Room name  (e.g. DBMS Revision)" required>
+                <select name="type">
+                    <option value="public">🌍 Public – anyone can join</option>
+                    <option value="private">🔒 Private – invite only</option>
+                </select>
+                <button class="btn">Create room</button>
+            </form>
+
+            <form class="form-card glass form" method="POST" action="/room/join">
+                <div class="form-card-title">Join with a code</div>
+                <input name="code" placeholder="Enter 6-character code" maxlength="6" required
+                    style="text-transform:uppercase;letter-spacing:.18em;font-weight:700;font-family:monospace;font-size:1rem">
+                <button class="btn">Join room</button>
+            </form>
+        </div>
+
+        <p class="section-label">Public rooms</p>
+        <div class="grid">
+            <% publicRooms.forEach(r => { %>
+                <div class="room-card glass">
+                    <span class="badge pub">Public</span>
+                    <h3><%= r.name %></h3>
+                    <p class="muted" style="font-size:.8rem">by <%= r.ownerName %></p>
+                    <a class="btn sm" href="/room/<%= r.code %>">Join →</a>
+                </div>
+            <% }) %>
+            <% if (!publicRooms.length) { %>
+                <p class="muted">No public rooms yet. Create the first one!</p>
+            <% } %>
+        </div>
+
+        <p class="section-label">My rooms</p>
+        <div class="grid">
+            <% myRooms.forEach(r => { %>
+                <div class="room-card glass">
+                    <span class="badge <%= r.type === 'private' ? 'priv' : 'pub' %>"><%= r.type %></span>
+                    <h3><%= r.name %></h3>
+                    <p class="muted" style="font-size:.8rem">Code: <span class="code-pill"><%= r.code %></span></p>
+                    <a class="btn sm" href="/room/<%= r.code %>">Open →</a>
+                </div>
+            <% }) %>
+            <% if (!myRooms.length) { %>
+                <p class="muted">You haven't created any rooms yet.</p>
+            <% } %>
+        </div>
+
+    </main>
+</body>
+</html>

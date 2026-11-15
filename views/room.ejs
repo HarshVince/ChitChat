@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= room.name %> | StudySync</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body data-code="<%= room.code %>" data-uid="<%= user._id %>">
+    <%- include('partials/nav', { user }) %>
+    <main>
+
+        <div class="room-topbar">
+            <div>
+                <h2><%= room.name %></h2>
+                <div class="room-meta">
+                    <span class="badge <%= room.type === 'private' ? 'priv' : 'pub' %>"><%= room.type %></span>
+                    <span class="code-pill"><%= room.code %></span>
+                    <span id="status">● Connecting…</span>
+                </div>
+            </div>
+            <a class="btn ghost sm" href="/">← Leave room</a>
+        </div>
+
+        <div class="room-layout">
+
+            <!-- Sidebar -->
+            <aside class="side">
+                <div class="side-card glass">
+                    <div class="side-label">👥 Online</div>
+                    <div id="members"></div>
+                </div>
+            </aside>
+
+            <!-- Main panel -->
+            <div class="main-panel glass">
+
+                <div class="tabs" id="tabs">
+                    <button class="tab active" data-t="chat">💬 Chat</button>
+                    <button class="tab" data-t="files">📁 Files</button>
+                </div>
+
+                <!-- Chat -->
+                <div id="t-chat" class="tab-body">
+                    <div class="chatbox" id="chatBox"></div>
+                    <div class="chat-footer">
+                        <input id="chatIn" placeholder="Type a message…" autocomplete="off">
+                        <button class="btn" id="chatSend">Send</button>
+                        <button class="btn red-btn sm" id="clearChat" title="Clear all messages">🗑</button>
+                    </div>
+                </div>
+
+                <!-- Files -->
+                <div id="t-files" class="tab-body hidden">
+                    <div class="upload-box">
+                        <form method="POST" action="/room/<%= room.code %>/upload" enctype="multipart/form-data">
+                            <div class="u-icon">📤</div>
+                            <p>Upload a file to share with everyone in this room (max 10 MB)</p>
+                            <div class="upload-row">
+                                <input type="file" name="file" required style="max-width:260px">
+                                <button class="btn sm">Upload</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="file-list">
+                        <% if (room.files && room.files.length) { %>
+                            <% room.files.forEach(f => { %>
+                                <div class="file-row">
+                                    <span class="f-icon">📄</span>
+                                    <div class="f-info">
+                                        <div class="f-name"><%= f.filename %></div>
+                                        <div class="f-meta">by <%= f.uploadedBy %> · <%= new Date(f.uploadedAt).toLocaleDateString() %></div>
+                                    </div>
+                                    <div class="f-actions">
+                                        <a class="btn ghost sm" href="<%= f.path %>" download="<%= f.filename %>">⬇ Download</a>
+                                        <form method="POST" action="/room/<%= room.code %>/delete/<%= f._id %>">
+                                            <button class="btn red-btn sm">🗑</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <p class="muted">No files yet. Upload one above.</p>
+                        <% } %>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+    <div id="toast" class="toast hidden"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/room.js"></script>
+</body>
+</html>

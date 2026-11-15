@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profile | StudySync</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/nav', { user }) %>
+    <main>
+        <div class="profile-wrap">
+            <form class="form-card glass form" method="POST" action="/user/profile">
+                <div class="profile-top">
+                    <span class="avatar big"><%= profile.name[0].toUpperCase() %></span>
+                    <div>
+                        <h2 style="margin-bottom:.2rem"><%= profile.name %></h2>
+                        <p class="muted"><%= profile.email %></p>
+                    </div>
+                </div>
+                <% if (msg) { %><div class="ok"><%= msg %></div><% } %>
+                <div>
+                    <p class="f-label">Display name</p>
+                    <input name="name" value="<%= profile.name %>" required>
+                </div>
+                <div>
+                    <p class="f-label">Course / Bio</p>
+                    <textarea name="bio" rows="3" placeholder="e.g. B.Tech CSE, 3rd year"><%= profile.bio %></textarea>
+                </div>
+                <button class="btn">Save changes</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

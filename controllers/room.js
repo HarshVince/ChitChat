@@ -60,4 +60,17 @@ async function deleteFile(req, res) {
     return res.redirect('/room/' + Room.code + '#files');
 }
 
-module.exports = { showHome, createRoom, joinRoom, showRoom, uploadFile, deleteFile };
+async function deleteRoom(req, res) {
+    const Room = await room.findOne({ code: req.params.code.toUpperCase() });
+    if (!Room) return res.redirect('/');
+    if (String(Room.owner) !== String(req.user._id)) return res.redirect('/room/' + Room.code);
+   
+    for (const file of Room.files) {
+        const diskPath = 'public' + file.path;
+        if (fs.existsSync(diskPath)) fs.unlinkSync(diskPath);
+    }
+    await room.deleteOne({ _id: Room._id });
+    return res.redirect('/');
+}
+
+module.exports = { showHome, createRoom, joinRoom, showRoom, uploadFile, deleteFile, deleteRoom };

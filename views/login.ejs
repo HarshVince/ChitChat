@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in | StudySync</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="auth-body">
+    <div class="auth-card glass2">
+        <div class="auth-logo">📚</div>
+        <h1 class="auth-title">StudySync</h1>
+        <p class="auth-sub">Study together, in real time.</p>
+
+        <form method="POST" action="/user/login">
+            <div>
+                <div class="f-label">Email address</div>
+                <input name="email" type="email" placeholder="you@example.com" required>
+            </div>
+            <div>
+                <div class="f-label">Password</div>
+                <input name="password" type="password" placeholder="••••••••" required minlength="4">
+            </div>
+            <div class="err"><%= locals.error || '' %></div>
+            <button class="btn">Log in</button>
+        </form>
+
+        <p class="auth-foot">New here? <a class="link" href="/signup">Create an account</a></p>
+    </div>
+</body>
+</html>

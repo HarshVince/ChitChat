@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const { createRoom, joinRoom, showRoom, uploadFile, deleteFile } = require('../controllers/room.js');
+const { createRoom, joinRoom, showRoom, uploadFile, deleteFile, deleteRoom } = require('../controllers/room.js');
 const router = express.Router();
 
 const storage = multer.diskStorage({
@@ -18,5 +18,6 @@ router.post('/join', joinRoom);
 router.get('/:code', showRoom);
 router.post('/:code/upload', upload.single('file'), uploadFile);
 router.post('/:code/delete/:fileId', deleteFile);
+router.post('/:code/delete-room', deleteRoom);
 
 module.exports = router;

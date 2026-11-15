@@ -19,7 +19,14 @@
                     <span id="status">● Connecting…</span>
                 </div>
             </div>
-            <a class="btn ghost sm" href="/">← Leave room</a>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <a class="btn ghost sm" href="/">← Leave room</a>
+                <% if (String(room.owner) === String(user._id)) { %>
+                <form method="POST" action="/room/<%= room.code %>/delete-room" onsubmit="return confirm('Delete this room and all its files? This cannot be undone.')">
+                    <button class="btn red-btn sm">🗑 Delete Room</button>
+                </form>
+                <% } %>
+            </div>
         </div>
 
         <div class="room-layout">
